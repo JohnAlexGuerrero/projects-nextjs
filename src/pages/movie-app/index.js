@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Image from 'next/image'
-import { getStaticPaths } from './[search]'
+import Carousel from '@/components/carousel'
 
 
 export default function MovieApp({ data }) {
@@ -19,8 +19,6 @@ export default function MovieApp({ data }) {
     const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=3fd2be6f0c70a2a598f084ddfb75487c&query=${query}`)
     const data_search = await res.json()
     setMovies(data_search.results)
-
-    console.log(movies)
   }
 
   const hasMovies = movies.length > 0
@@ -41,29 +39,32 @@ export default function MovieApp({ data }) {
         <button type='submit' onClick={handleSearch}>Submit</button>
       </div>
 
-      <h1>Lista de artículos</h1>
+      <h1>My List</h1>
 
-      <div className="px-10 pt-5 flex flex-col gap-10">
+      <Carousel />
+
+      <div className="px-10 pt-5">
         {
           hasMovies
-          ? movies.map(({id, original_title, title, poster_path}) =>(
-              <div key={id}>
-                <Image
-                  src={'https://image.tmdb.org/t/p/w1280/'+poster_path}
-                  height={200}
-                  width={200}
-                  alt={original_title}
-                ></Image>
-                <p>{title}</p>
-              </div>
-            ))
-          : (
-              <div className=" bg-red-400 text-white text-center p-10">
-                <p>No se encontraron pokemones que coincidan con la búsqueda</p>
-                <span className=" text-md font-thin">Prueba buscar por otro nombre</span>
-              </div>
-          )
-        }
+            ? movies.map(({id, original_title, title, poster_path}) =>(
+                <div key={id} className='shadow-white shadow-md w-32'>
+                  <Image
+                    className='w-auto'
+                    src={'https://image.tmdb.org/t/p/w1280/'+poster_path}
+                    height={200}
+                    width={200}
+                    alt={original_title}
+                  ></Image>
+                  <p className='font-light'>{title}</p>
+                </div>
+              ))
+            : (
+                <div className=" bg-red-400 text-white text-center p-10">
+                  <p>No se encontrarón peliculas que coincidan con la búsqueda</p>
+                  <span className=" text-md font-thin">Prueba buscar por otro título...</span>
+                </div>
+            )
+          }
       </div>
     </>
   )
